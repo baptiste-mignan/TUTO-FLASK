@@ -9,5 +9,5 @@ def home():
 @app.route("/detail/<id>")
 def detail(id):
     books = get_sample()
-    book = books[int(id)]
+    book = books[int(id)-1]
     return render_template("detail.html", book=book)
