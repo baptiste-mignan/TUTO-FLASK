@@ -28,16 +28,6 @@ def get_sample():
 
 def get_author(id):
     return Author.query.filter(Author.id == id)[0]
-# import yaml, os.path
-# 
-# Books = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), "data.yml")))
-# 
-# # Pour avoir un id
-# i = 0
-# for book in Books:
-#     book['id'] = i
-#     i += 1
-# 
-# def get_sample():
-#     return Books[0:10]
-# Author.query.filter(Author.name =="Robin Hobb").one().books.filter(Book.price < 7).all()
+
+def get_author_livre(id):
+    return Book.query.filter(Book.author_id == id)
