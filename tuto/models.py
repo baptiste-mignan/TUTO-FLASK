@@ -1,6 +1,6 @@
 from .app import db
 
-class Author (db.Model):
+class Author(db.Model):
     """
     Class décrivant la table Author
     """
@@ -24,8 +24,10 @@ class Book(db.Model):
         return "<Book (%d) %s>" % (self.id , self.title)
     
 def get_sample():
-    return Book.query.all()
+    return Book.query.limit(20).all()
 
+def get_author(id):
+    return Author.query.filter(Author.id == id)[0]
 # import yaml, os.path
 # 
 # Books = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), "data.yml")))
