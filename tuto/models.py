@@ -31,3 +31,10 @@ def get_author(id):
 
 def get_author_livre(id):
     return Book.query.filter(Book.author_id == id)
+
+def add_author_bd(nom_author):
+    if len(list(Author.query.filter(Author.name == nom_author))) == 0:
+        author = Author(name=nom_author)
+        db.session.add(author)
+        db.session.commit()
+        return author.id

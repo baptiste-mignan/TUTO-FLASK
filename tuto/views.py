@@ -1,6 +1,6 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, Author, get_author, get_author_livre
+from .models import get_sample, Author, get_author, get_author_livre, add_author_bd
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField
 from wtforms . validators import DataRequired
@@ -43,3 +43,16 @@ def one_author(id):
     author = get_author(id)
     books = get_author_livre(id)
     return render_template("one_author.html", name_author=author.name, books=books)
+
+@app.route("/add/author/")
+def add_author():
+    f = AuthorForm(id=None, name=None)
+    return render_template("add-author.html", form=f)
+
+@app.route("/save/add/author/", methods = ("POST", ))
+def save_add_author():
+    f = AuthorForm()
+    if f.validate_on_submit():
+        id = add_author_bd(f.name.data)
+        return redirect(url_for('one_author', id = id))
+    return render_template("add-author.html")

@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css')}}">
 {% endblock %}
 {% block content %}
-<h1 >Edit author : {{ author.name }}</h1 >
-<form role="form" method="POST" action ="{{ url_for ('save_author') }}">
+<h1 >Ajout d'un author</h1 >
+<form role="form" method="POST" action ="{{ url_for ('save_add_author') }}">
     {{ form.hidden_tag () }}
     <div class= 
         {% if form.name.errors %}
