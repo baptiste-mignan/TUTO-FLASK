@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms.validators import DataRequired
 from hashlib import sha256
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from flask import request
 
 @app.route("/")
@@ -16,13 +16,14 @@ def home():
 def detail(id):
     books = get_sample()
     book = books[int(id)-1]
-    return render_template("detail.html", book=book)
+    return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id)
 
 class AuthorForm(FlaskForm):
     id = HiddenField('id')
     name = StringField('Nom', validators = [DataRequired()])
 
 @app.route("/edit/author/<int:id>")
+@login_required
 def edit_author(id):
     a = get_author(id)
     f = AuthorForm(id=a.id, name=a.name)
@@ -45,7 +46,7 @@ def save_author():
 def one_author(id):
     author = get_author(id)
     books = get_author_livre(id)
-    return render_template("one_author.html", name_author=author.name, books=books)
+    return render_template("one_author.html", name_author=author.name, books=books, author_id = id)
 
 @app.route("/add/author/")
 def add_author():
@@ -87,3 +88,4 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+

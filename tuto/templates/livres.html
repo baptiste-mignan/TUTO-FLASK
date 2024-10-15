@@ -9,6 +9,7 @@
         <ul>
             {% for l in livres %}
             <li>{{ livres.author }}</li>
+            <p><a href="{{ url_for ('one_author', id=author_id) }}">{{ author.name }} </a></p>
             {% endfor %}
         </ul>
     </body>

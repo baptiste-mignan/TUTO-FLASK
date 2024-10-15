@@ -35,7 +35,9 @@ nav img{
     width: 30%;
 }
 
-a {
+nav a {
     color: white;
+}
+a{
     text-decoration: none;
 }

@@ -11,6 +11,7 @@ class Author(db.Model):
     def __repr__ (self ):
         return "<Author (%d) %s>" % (self.id , self.name)
 
+
 class Book(db.Model):
     """
     Class décrivant la table Book
