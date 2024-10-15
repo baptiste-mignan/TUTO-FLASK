@@ -1,9 +1,12 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, Author, get_author, get_author_livre, add_author_bd
+from .models import get_sample, get_author, get_author_livre, add_author_bd, User
 from flask_wtf import FlaskForm
-from wtforms import StringField , HiddenField
-from wtforms . validators import DataRequired
+from wtforms import StringField , HiddenField, PasswordField
+from wtforms.validators import DataRequired
+from hashlib import sha256
+from flask_login import login_user, current_user, logout_user
+from flask import request
 
 @app.route("/")
 def home():
@@ -56,3 +59,31 @@ def save_add_author():
         id = add_author_bd(f.name.data)
         return redirect(url_for('one_author', id = id))
     return render_template("add-author.html")
+
+class LoginForm(FlaskForm):
+    username = StringField('Username')
+    password = PasswordField('Password')
+    def get_authenticated_user(self):
+        user = User.query.get(self.username.data)
+        if user is None:
+            return None
+        m = sha256()
+        m.update(self.password.data.encode())
+        passwd = m.hexdigest()
+        return user if passwd == user.password else None
+
+@app.route("/login/", methods =("GET", "POST",))
+def login():
+    user = None
+    f = LoginForm()
+    if f.validate_on_submit():
+        user = f.get_authenticated_user()
+        if user:
+            login_user(user)
+            return redirect(url_for("home"))
+    return render_template("login.html", form=f)
+
+@app.route("/logout/")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))

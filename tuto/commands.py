@@ -2,6 +2,9 @@ import click
 from .app import app, db
 from .models import User
 from hashlib import sha256
+# import des modèles
+from .models import Author, Book
+import yaml
 
 @app.cli.command()
 @click.argument('filename')
@@ -12,11 +15,7 @@ def loaddb(filename):
     db.create_all()
 
     # chargement de notre jeu de données
-    import yaml
     books = yaml.safe_load(open(filename))
-
-    # import des modèles
-    from .models import Author, Book
 
     # première passe: création de tous les auteurs
     authors = {}

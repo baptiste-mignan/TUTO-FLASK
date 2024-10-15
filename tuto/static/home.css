@@ -17,3 +17,25 @@ footer{
 main > .container {
     padding: 60px 15px 0;
 }
+nav{
+    color: white;
+}
+nav img{
+    height : 75%;
+    width : 50%;
+}
+.nav.navbar-nav.navbar-right{
+    margin-left: 4%; 
+    height: 100%;
+    width: 10%;
+    display: flex;
+    flex-direction: row;
+}
+.nav.navbar-nav.navbar-right li{
+    width: 30%;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
