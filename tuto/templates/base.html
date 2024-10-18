@@ -48,7 +48,7 @@
                       
                     </li>
                     <li>
-                      <a href="{{url_for('logout')}}"><img src ='static/images/logout.png'><span class="glyphicon glyphicon-log-out" title="Logout"></span ></a>
+                      <a href="{{url_for('logout')}}"><img src ="{{ url_for('static', filename='images/logout.png') }}"><span class="glyphicon glyphicon-log-out" title="Logout"></span ></a>
                     </li>
 
                     {%else%}
