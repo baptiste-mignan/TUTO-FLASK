@@ -10,7 +10,13 @@ from flask import request
 
 @app.route("/")
 def home():
-    return render_template("home.html", title="My Books !", books=get_sample())
+    def auteur(livre):
+        return get_author(livre.author_id).name
+    books = get_sample(20)
+    print(books)
+    books = sorted(books , key=auteur)
+    print(books)
+    return render_template("home.html", title="My Books !", books=books)
 
 @app.route("/detail/<id>")
 def detail(id):
