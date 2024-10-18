@@ -7,9 +7,7 @@
 <h1>{{title}}</h1>
 <div class="sample">
     <h1>{{name_author}}</h1>
-    {% if current_user.is_authenticated %}
-    <p><a href="{{ url_for ('edit_author', id=author_id) }}">Edit </a></p>
-    {% endif %}
+    <p><a href="{{ url_for ('edit_author', id=author_id) }}">Edit</a></p>
     {% for x in books %}
     <a href="{{url_for('detail', id=x.id)}}">
         <img src="{{ url_for('static', filename='images/'+x.img) }}" alt="{{x.title}}" title="{{x.title}}">
