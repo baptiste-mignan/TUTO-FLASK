@@ -26,7 +26,7 @@ class Book(db.Model):
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
     
-def get_sample(nb):
+def get_sample(nb=400):
     return Book.query.limit(nb).all()
 
 def get_author(id):

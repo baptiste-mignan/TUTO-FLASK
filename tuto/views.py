@@ -13,14 +13,12 @@ def home():
     def auteur(livre):
         return get_author(livre.author_id).name
     books = get_sample(20)
-    print(books)
     books = sorted(books , key=auteur)
-    print(books)
     return render_template("home.html", title="My Books !", books=books)
 
 @app.route("/detail/<id>")
 def detail(id):
-    books = get_sample()
+    books = get_sample(20)
     book = books[int(id)-1]
     return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id)
 
