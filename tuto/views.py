@@ -1,6 +1,6 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, get_author, get_author_livre, add_author_bd, User
+from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms.validators import DataRequired
@@ -14,13 +14,15 @@ def home():
         return get_author(livre.author_id).name
     books = get_sample(20)
     books = sorted(books , key=auteur)
+    
     return render_template("home.html", title="My Books !", books=books)
 
 @app.route("/detail/<id>")
 def detail(id):
     books = get_sample(20)
     book = books[int(id)-1]
-    return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id)
+    favoris = is_fav(current_user, book)
+    return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id, favoris=favoris)
 
 class AuthorForm(FlaskForm):
     id = HiddenField('id')
@@ -96,3 +98,24 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+
+
+@app.route("/detail/add/<book_id>", methods =("GET","POST" ,))
+@login_required
+def add_favoris_route(book_id):
+    add_favoris(current_user.get_id(), book_id)
+    return detail(book_id)
+
+@app.route("/detail/sup/<book_id>", methods =("GET","POST" ,))
+@login_required
+def supp_favoris_route(book_id):
+    supp_favoris(current_user.get_id(), book_id)
+    return detail(book_id)
+
+@app.route("/favoris")
+@login_required
+def favoris_view():
+    user = current_user
+    id_user = user.get_id()
+    user_favoris = get_books_favoris(id_user)
+    return render_template("favoris.html", books=user_favoris)

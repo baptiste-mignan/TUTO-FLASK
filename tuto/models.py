@@ -1,6 +1,13 @@
 from .app import db
 from flask_login import UserMixin
 from .app import login_manager
+from sqlalchemy.orm import Mapped
+
+user_favoris = db.Table('user_favoris',
+    db.Column('user_id', db.String(50), db.ForeignKey('user.username'), primary_key=True),
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key = True)
+)
+
 
 class Author(db.Model):
     """
@@ -45,9 +52,46 @@ def add_author_bd(nom_author):
 class User(db.Model , UserMixin):
     username = db.Column(db.String(50), primary_key =True)
     password = db.Column(db.String(64))
+    books : Mapped[list["Book"]]= db.relationship(secondary=user_favoris)
     def get_id(self):
         return self.username
+    
 
 @login_manager.user_loader
 def load_user(username):
     return User.query.get(username)
+
+
+
+
+def add_favoris(user_id, book_id):
+    print('v')
+    (u, ) = User.query.filter(User.username == user_id)
+    (b, ) = Book.query.filter(Book.id == book_id)
+    u.books.append(b)
+    db.session.commit()
+
+def supp_favoris(user_id, book_id):
+    (user, ) = User.query.filter(User.username == user_id)
+    (book, ) = Book.query.filter(Book.id == book_id)
+    if is_fav(user, book):
+        user.books.remove(book)
+        db.session.commit()
+
+def get_books_favoris(user_id):
+    liste_books = []
+    favoris = db.session.query(user_favoris).filter(user_favoris.c.user_id==user_id ).all()
+    
+    for fav in favoris:
+        book = Book.query.get(fav.book_id)  # Récupérer le livre par son ID
+        if book:
+            liste_books.append(book)
+    return liste_books
+
+
+def is_fav(user, book):
+    return len(db.session.query(user_favoris).filter((user_favoris.c.user_id==user.username) & (user_favoris.c.book_id == book.id)).all()) == 1
+
+
+
+
