@@ -7,12 +7,19 @@
 <h1>{{title}}</h1>
 <div class="sample">
     <p><a href="{{ url_for ('one_author', id=author_id) }}">{{ author_name }} </a></p>
-    {% for x in books %}
-    <a href="{{url_for('detail', id=x.id)}}">
-        <img src="{{ url_for('static', filename='images/'+x.img) }}" alt="{{x.title}}" title="{{x.title}}">
-    </a>
-    {% endfor %}
+    
     <img src="{{ url_for('static', filename='images/'+book.img) }}" alt="{{book.title}}" title="{{book.title}}">
+    
+    {% if current_user.is_authenticated %}
+        {% if favoris %}
+            <form action="{{ url_for('supp_favoris_route', book_id=book.id) }}" method="POST">
+                <button type="submit" class="btn btn-default">Supprimer des favoris</button>
+            </form> 
+        {% else %}
+            <form action="{{ url_for('add_favoris_route', book_id=book.id) }}" method="POST">
+                <button type="submit" class="btn btn-default">Ajouter aux favoris</button>
+            </form>
+        {% endif %}
+    {% endif %}
 </div>
-
 {% endblock %}
