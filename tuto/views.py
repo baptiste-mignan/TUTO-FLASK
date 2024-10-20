@@ -12,8 +12,7 @@ from flask import request
 def home():
     def auteur(livre):
         return get_author(livre.author_id).name
-    books = get_sample(20)
-    books = sorted(books , key=auteur)
+    books = sorted(get_sample(20) , key=auteur)
     
     return render_template("home.html", title="My Books !", books=books)
 
@@ -136,19 +135,15 @@ def search():
 
 @app.route("/genre/<genre_name>")
 def genre(genre_name):
-    books = get_books_genre(genre_name)
-    return render_template("home.html", title=genre_name, books=books)
+    return render_template("home.html", title=genre_name, books=get_books_genre(genre_name))
 
 class GenreForm(FlaskForm):
     id = HiddenField('id')
-    # genres = [set(get_genres()) - set(get_genres_book(get_book_id(int(f.id.data))))]
-    genre = StringField('Genre', validators = [DataRequired()]) # , choices=genres
+    genre = StringField('Genre', validators = [DataRequired()])
 
 @app.route("/add/genre/<int:book_id>", methods=('GET', 'POST',))
 def add_genre(book_id):
-    book = get_book_id(book_id)
-    f = GenreForm(id=book.id)
-    return render_template("add_genre.html", book =book, form=f)
+    return render_template("add_genre.html", book=get_book_id(book_id), form=GenreForm(id=book.id))
 
 @app.route("/save/genre/", methods =("POST" ,))
 def save_genre():
@@ -156,15 +151,12 @@ def save_genre():
     f = GenreForm()
     if f.validate_on_submit():
         book = get_book_id(int(f.id.data))
-        print("la", f.genre.data not in get_noms_genres())
-        print(get_noms_genres())
         if f.genre.data not in get_noms_genres():
             genre = Genre(nom_genre=f.genre.data)
             db.session.add(genre)
             db.session.commit()
         else:
             genre = db.session.query(Genre).filter(Genre.nom_genre==f.genre.data).all()[0]
-        print("ICI", genre)
         book.genres.append(genre)
         genre.books.append(book)
         db.session.add(genre)
@@ -172,4 +164,4 @@ def save_genre():
         db.session.commit()
         return redirect(url_for('detail', id=book.id))
     book = get_book_id(int(f.id.data))
-    return render_template("add_genre.html", book =book, form=f)
+    return render_template("add_genre.html", book=book, form=f)
