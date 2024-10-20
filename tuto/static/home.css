@@ -19,6 +19,7 @@ main > .container {
 }
 nav{
     color: white;
+    height:10%;
 }
 nav img{
     height : 75%;
@@ -26,7 +27,6 @@ nav img{
 }
 .nav.navbar-nav.navbar-right{
     margin-left: 4%; 
-    height: 100%;
     width: 10%;
     display: flex;
     flex-direction: row;
@@ -40,4 +40,89 @@ nav a {
 }
 a{
     text-decoration: none;
+}
+
+nav .search{
+    height:50%;
+}
+
+
+#search{
+    margin-top: 5%;
+    height: 50px;
+    width: 100%;
+}
+
+#searchsubmit{
+    margin-top: 5%;
+    height: 50px;
+    width: 20%;
+}
+
+
+
+
+
+
+
+
+
+
+
+#wrap {
+    width: 100px;  
+    margin-right: 10%;
+    white-space: nowrap;
+}
+
+#wrap .navbar li {
+    list-style: none;
+}
+
+#wrap .navbar li a {
+    color: white; 
+}
+
+#wrap .navbar li:hover,
+#wrap .navbar li a:hover {
+    background-color: #444444;
+}
+
+#wrap .navbar li ul {
+    display: none;
+    padding: 0;
+    position: absolute; 
+    background-color: #333;
+    z-index: 1000;
+}
+
+#wrap .navbar li:hover ul {
+    display: block; 
+}
+
+#wrap .navbar li ul li {
+    padding: 5px;
+    background-color: #444444; 
+}
+
+#wrap .navbar li ul li input[type="number"] {
+    width: 50px;                  
+    height: 30px;
+    margin-left: 10px;           
+}
+
+#wrap .navbar li ul li input[type="checkbox"] {
+    width: 20px;                  
+    height: 20px;
+    margin-left: 10px;           
+}
+
+#wrap .navbar li ul li {
+    display: flex;              
+    align-items: center;          
+}
+
+#wrap img{
+    margin-top: 15%;
+    width : 100%;
 }

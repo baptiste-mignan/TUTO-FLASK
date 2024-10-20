@@ -1,6 +1,6 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books
+from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books, search_filter
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms.validators import DataRequired
@@ -122,17 +122,21 @@ def favoris_view():
     user_favoris = get_books_favoris(id_user)
     return render_template("favoris.html", books=user_favoris)
 
+
+
+
+
 @app.route("/search", methods=('GET',))
 def search():
     q = request.args.get("search")
-    print(q)
+    titre = request.args.get("titre")
+    auteur = request.args.get("auteur")
+    prix = request.args.get("prix")
+    erreur = ''
+    results = search_filter(q, titre, auteur, prix)
+    if results == []:
+        results = get_all_books()
+        erreur = "Aucun livre ne correspond"    
+    return render_template("search_results.html", results=results, title="My Books", erreur=erreur)
 
-    if q:
-        results = Book.query.filter(
-            Book.title.ilike(f"%{q}%"))\
-            .order_by(Book.title.asc()).limit(20).all()
-        
-    else:
-        results = []
-    print(results)
-    return render_template("search_results.html", results=results, title="My Books")
+
