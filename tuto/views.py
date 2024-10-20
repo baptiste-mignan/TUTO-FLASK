@@ -1,6 +1,6 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books, search_filter
+from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books, get_genres_book, get_books_genre, get_book_id, Genre, book_genre, get_genres, get_noms_genres, search_filter
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms.validators import DataRequired
@@ -12,8 +12,7 @@ from flask import request
 def home():
     def auteur(livre):
         return get_author(livre.author_id).name
-    books = get_sample(20)
-    books = sorted(books , key=auteur)
+    books = sorted(get_sample(20) , key=auteur)
     
     return render_template("home.html", title="My Books !", books=books)
 
@@ -22,9 +21,10 @@ def detail(id):
     books = get_all_books()
     book = books[int(id)-1]
     favoris = None
+    genres=get_genres_book(book)
     if isinstance(current_user, User):
         favoris = is_fav(current_user, book)
-    return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id, favoris=favoris)
+    return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id, favoris=favoris, genres=genres)
 
 class AuthorForm(FlaskForm):
     id = HiddenField('id')
@@ -139,4 +139,35 @@ def search():
         erreur = "Aucun livre ne correspond"    
     return render_template("search_results.html", results=results, title="My Books", erreur=erreur)
 
+@app.route("/genre/<genre_name>")
+def genre(genre_name):
+    return render_template("home.html", title=genre_name, books=get_books_genre(genre_name))
 
+class GenreForm(FlaskForm):
+    id = HiddenField('id')
+    genre = StringField('Genre', validators = [DataRequired()])
+
+@app.route("/add/genre/<int:book_id>", methods=('GET', 'POST',))
+def add_genre(book_id):
+    return render_template("add_genre.html", book=get_book_id(book_id), form=GenreForm(id=book.id))
+
+@app.route("/save/genre/", methods =("POST" ,))
+def save_genre():
+    book = None
+    f = GenreForm()
+    if f.validate_on_submit():
+        book = get_book_id(int(f.id.data))
+        if f.genre.data not in get_noms_genres():
+            genre = Genre(nom_genre=f.genre.data)
+            db.session.add(genre)
+            db.session.commit()
+        else:
+            genre = db.session.query(Genre).filter(Genre.nom_genre==f.genre.data).all()[0]
+        book.genres.append(genre)
+        genre.books.append(book)
+        db.session.add(genre)
+        db.session.add(book)
+        db.session.commit()
+        return redirect(url_for('detail', id=book.id))
+    book = get_book_id(int(f.id.data))
+    return render_template("add_genre.html", book=book, form=f)

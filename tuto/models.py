@@ -8,6 +8,10 @@ user_favoris = db.Table('user_favoris',
     db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key = True)
 )
 
+book_genre = db.Table('book_genre',
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id'), primary_key=True),
+    db.Column('genre_id', db.String(100), db.ForeignKey('genre.nom_genre'), primary_key=True)
+)
 
 class Author(db.Model):
     """
@@ -30,8 +34,18 @@ class Book(db.Model):
     img = db.Column(db.String(200))
     author_id = db.Column(db.Integer, db.ForeignKey("author.id"))
     author = db.relationship("Author", backref = db.backref("books", lazy="dynamic"))
+    genres : Mapped[list["Genre"]]= db.relationship(secondary=book_genre)
     def __repr__ (self ):
         return "<Book (%d) %s>" % (self.id , self.title)
+
+class Genre(db.Model):
+    """
+    Class décrivant la table Genre
+    """
+    nom_genre = db.Column(db.String(100), primary_key=True)
+    books : Mapped[list["Book"]]= db.relationship(secondary=book_genre)
+    def __repr__(self):
+        return "<Genre %s>" % (self.nom_genre)
     
 def get_sample(nb=400):
     return Book.query.limit(nb).all()
@@ -94,7 +108,31 @@ def get_books_favoris(user_id):
 def is_fav(user, book):
     return len(db.session.query(user_favoris).filter((user_favoris.c.user_id==user.username) & (user_favoris.c.book_id == book.id)).all()) == 1
 
+def get_genres_book(book):
+    couple = db.session.query(book_genre).filter(book_genre.c.book_id==book.id).all()
+    genres = []
+    for (_, genre) in couple:
+        genres.append(genre)
+    return genres
 
+def get_books_genre(name):
+    couple = db.session.query(book_genre).filter(book_genre.c.genre_id==name).all()
+    books= []
+    for (book_id, _) in couple:
+        books.append(get_book_id(book_id))
+    return books
+
+def get_genres():
+    return Genre.query.all()
+
+def get_book_id(id):
+    return db.session.query(Book).filter(Book.id == id)[0]
+
+def get_noms_genres():
+    genres = []
+    for genre in Genre.query.all():
+        genres.append(genre.nom_genre)
+    return genres
 
 def search_filter(q, titre, auteur, prix):
     results = get_all_books()
