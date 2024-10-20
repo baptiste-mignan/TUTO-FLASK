@@ -1,7 +1,11 @@
  # Projet Flask - Gestion de Bibliothèque
  ## Présentation
 
-Ce projet a été réalisé dans le cadre d'un travail en groupe de deux, en complément des travaux pratiques sur Flask. L'application permet de gérer une collection de livres avec des fonctionnalités telles que l'authentification, l'ajout et la gestion des auteurs et des livres, ainsi que la gestion des favoris.
+Ce projet a été réalisé dans le cadre d'un travail en groupe de deux, en complément des travaux pratiques sur Flask. L'application permet de gérer une collection de livres avec des fonctionnalités telles que l'authentification, l'ajout et la gestion des auteurs et des livres, ainsi que la gestion des favoris. Le projet étant la continuité du projet fait en cours, c'est la suite du projet d'abord commencer par Baptiste Mignan qui a été choisis pour continuer.
+
+Vous retrouverez le projet sur ce dépôt distant
+
+https://github.com/baptiste-mignan/TUTO-FLASK/graphs/contributors
 
  ## Composition du Groupe
 
