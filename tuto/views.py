@@ -149,7 +149,7 @@ class GenreForm(FlaskForm):
 
 @app.route("/add/genre/<int:book_id>", methods=('GET', 'POST',))
 def add_genre(book_id):
-    return render_template("add_genre.html", book=get_book_id(book_id), form=GenreForm(id=book.id))
+    return render_template("add_genre.html", book=get_book_id(book_id), form=GenreForm(id=book_id))
 
 @app.route("/save/genre/", methods =("POST" ,))
 def save_genre():
