@@ -36,6 +36,9 @@ class Book(db.Model):
 def get_sample(nb=400):
     return Book.query.limit(nb).all()
 
+def get_all_books():
+    return Book.query.all()
+
 def get_author(id):
     return Author.query.filter(Author.id == id)[0]
 
@@ -65,7 +68,6 @@ def load_user(username):
 
 
 def add_favoris(user_id, book_id):
-    print('v')
     (u, ) = User.query.filter(User.username == user_id)
     (b, ) = Book.query.filter(Book.id == book_id)
     u.books.append(b)

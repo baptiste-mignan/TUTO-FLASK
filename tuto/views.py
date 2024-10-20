@@ -1,6 +1,6 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav
+from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms.validators import DataRequired
@@ -19,9 +19,11 @@ def home():
 
 @app.route("/detail/<id>")
 def detail(id):
-    books = get_sample(20)
+    books = get_all_books()
     book = books[int(id)-1]
-    favoris = is_fav(current_user, book)
+    favoris = None
+    if isinstance(current_user, User):
+        favoris = is_fav(current_user, book)
     return render_template("detail.html", book=book, author_name=get_author(book.author_id).name, author_id=book.author_id, favoris=favoris)
 
 class AuthorForm(FlaskForm):
@@ -119,3 +121,18 @@ def favoris_view():
     id_user = user.get_id()
     user_favoris = get_books_favoris(id_user)
     return render_template("favoris.html", books=user_favoris)
+
+@app.route("/search", methods=('GET',))
+def search():
+    q = request.args.get("search")
+    print(q)
+
+    if q:
+        results = Book.query.filter(
+            Book.title.ilike(f"%{q}%"))\
+            .order_by(Book.title.asc()).limit(20).all()
+        
+    else:
+        results = []
+    print(results)
+    return render_template("search_results.html", results=results, title="My Books")
