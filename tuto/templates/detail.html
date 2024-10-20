@@ -11,8 +11,15 @@
     <img src="{{ url_for('static', filename='images/'+book.img) }}" alt="{{book.title}}" title="{{book.title}}">
     <p>{{book.title}}</p>
     <p>{{book.price}} euro</p>
-    <a href="{{book.url}}">{{book.url}}</a>
+    <p>
+    {% for x in genres %}
+        <a href="{{ url_for ('genre', genre_name=x) }}">{{ x }}</a>
+    {% endfor %}
+    </p>
     {% if current_user.is_authenticated %}
+        <form action="{{ url_for('add_genre', book_id=book.id) }}" method="POST">
+            <button type="submit" class="btn btn-default">Ajouter un genre</button>
+        </form>
         {% if favoris %}
             <form action="{{ url_for('supp_favoris_route', book_id=book.id) }}" method="POST">
                 <button type="submit" class="btn btn-default">Supprimer des favoris</button>
@@ -23,5 +30,6 @@
             </form>
         {% endif %}
     {% endif %}
+    <a href="{{book.url}}">{{book.url}}</a>
 </div>
 {% endblock %}
