@@ -5,7 +5,7 @@ Ce projet a été réalisé dans le cadre d'un travail en groupe de deux, en com
 
 Vous retrouverez le projet sur ce dépôt distant
 
-https://github.com/baptiste-mignan/TUTO-FLASK/graphs/contributors
+https://github.com/baptiste-mignan/TUTO-FLASK.git
 
  ## Composition du Groupe
 
