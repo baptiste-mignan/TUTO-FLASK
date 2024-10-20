@@ -96,4 +96,16 @@ def is_fav(user, book):
 
 
 
-
+def search_filter(q, titre, auteur):
+    results = get_all_books()
+    results2 = []
+    if titre:
+        for book in results:
+            if q in book.title:
+                results2.append(book)
+    if auteur:
+        for book in results:
+            if q in book.author.name:
+                results2.append(book)
+    results = results2    
+    return results

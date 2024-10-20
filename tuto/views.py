@@ -1,6 +1,6 @@
 from .app import app, db
 from flask import render_template, url_for , redirect
-from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books
+from .models import get_sample, get_author, get_author_livre, add_author_bd, User ,add_favoris, get_books_favoris, supp_favoris, is_fav, Book, get_all_books, search_filter
 from flask_wtf import FlaskForm
 from wtforms import StringField , HiddenField, PasswordField
 from wtforms.validators import DataRequired
@@ -128,9 +128,7 @@ def search():
     print(q)
 
     if q:
-        results = Book.query.filter(
-            Book.title.ilike(f"%{q}%"))\
-            .order_by(Book.title.asc()).limit(20).all()
+        results = search_filter(q, True, False, True)
         
     else:
         results = []
