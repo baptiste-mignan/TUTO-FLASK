@@ -96,16 +96,28 @@ def is_fav(user, book):
 
 
 
-def search_filter(q, titre, auteur):
+def search_filter(q, titre, auteur, prix):
     results = get_all_books()
     results2 = []
-    if titre:
+    if prix == '':
+        prix = None
+    else:
+        prix = float(prix)
+
+    if q == '':
+        titre = None 
+        auteur = None
+    if titre is not None:
         for book in results:
-            if q in book.title:
+            if q.upper() in book.title.upper():
                 results2.append(book)
-    if auteur:
+    if auteur is not None:
         for book in results:
-            if q in book.author.name:
+            if q.upper() in book.author.name.upper():
+                results2.append(book)
+    if prix is not None:
+        for book in results:
+            if prix >= book.price:
                 results2.append(book)
     results = results2    
     return results

@@ -37,9 +37,22 @@
                     </li>
                   </ul>
                   
-                  <form class="d-flex" role="search" action="{{ url_for('search') }}" method="GET">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search", name="search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+    
+                  <form class="d-flex"  action="{{ url_for('search') }}" method="GET">
+                    <div id="wrap">
+                      <ul class="navbar">
+                        <li>
+                          <a href="#"><img src ="{{ url_for('static', filename='images/filtre.png') }}"></a>
+                          <ul>
+                            <li><a href="#">Title</a><input type="checkbox" id="scales" name="titre" checked value="1" {% if request.args.get('titre') %} checked {% endif %}/> </li>
+                            <li><a href="#">Author</a><input type="checkbox" id="scales" name="auteur" checked value="1" {% if request.args.get('auteur') %} checked {% endif %} /></li>
+                            <li><a href="#">Max Price</a><input type="number" id="scales" name="prix" value="{{ request.args.get('prix') }}"/></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
+                    <button class="btn btn-outline-success" type="submit" id="searchsubmit">Search</button>
                   </form>
                   <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}

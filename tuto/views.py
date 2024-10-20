@@ -122,15 +122,21 @@ def favoris_view():
     user_favoris = get_books_favoris(id_user)
     return render_template("favoris.html", books=user_favoris)
 
+
+
+
+
 @app.route("/search", methods=('GET',))
 def search():
     q = request.args.get("search")
-    print(q)
+    titre = request.args.get("titre")
+    auteur = request.args.get("auteur")
+    prix = request.args.get("prix")
+    erreur = ''
+    results = search_filter(q, titre, auteur, prix)
+    if results == []:
+        results = get_all_books()
+        erreur = "Aucun livre ne correspond"    
+    return render_template("search_results.html", results=results, title="My Books", erreur=erreur)
 
-    if q:
-        results = search_filter(q, True, False, True)
-        
-    else:
-        results = []
-    print(results)
-    return render_template("search_results.html", results=results, title="My Books")
+
